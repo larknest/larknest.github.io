@@ -277,7 +277,7 @@
 
   
     
-    <h3 class="article-title"><a href="/2017/01/18/h5/"><span>h5</span></a></h3>
+    <h3 class="article-title"><a href="/2017/01/18/h5/"><span>移动端H5页面的适配与兼容</span></a></h3>
     
   
 
@@ -297,7 +297,21 @@
   <div class="article-content">
     <div class="entry">
       
-        
+        <h1 id="关键性基本概念"><a href="#关键性基本概念" class="headerlink" title="关键性基本概念"></a>关键性基本概念</h1><h2 id="物理像素-physical-pixel"><a href="#物理像素-physical-pixel" class="headerlink" title="物理像素(physical pixel)"></a>物理像素(physical pixel)</h2><p>一个物理像素是显示器(手机屏幕)上最小的物理显示单元，在操作系统的调度下，每一个设备像素都有自己的颜色值和亮度值, 而我们经常听到的分辨率就是用物理像素来衡量计算的</p>
+<h2 id="设备独立像素-density-independent-pixel"><a href="#设备独立像素-density-independent-pixel" class="headerlink" title="设备独立像素(density-independent pixel)"></a>设备独立像素(density-independent pixel)</h2><p>设备独立像素(也叫密度无关像素)，也就是设备的宽高，也可以认为是计算机坐标系统中得一个点，这个点代表一个可以由程序使用的虚拟像素(比如: css像素)，然后由相关系统转换为物理像素。</p>
+<h2 id="设备像素比-device-pixel-ratio-，简称dpr"><a href="#设备像素比-device-pixel-ratio-，简称dpr" class="headerlink" title="设备像素比(device pixel ratio)，简称dpr"></a>设备像素比(device pixel ratio)，简称dpr</h2><p>物理像素和设备独立像素之间存在着一定的对应关系</p>
+<p>计算公式如下：</p>
+<p>dpr = 物理像素 / 设备独立像素 </p>
+<p>以iphone6为例：<br>设备独立像素： 375×667   物理像素（分辨率）： 750×1334<br>求iPhone6的dpr？<br>解：750/375 = 2 dpr     //x轴方向相除<br>       or<br>1334/667 = 2 dpr    //y轴方向相除<br>在不同的屏幕上(普通屏幕 vs retina屏幕)，css像素所呈现的大小(物理尺寸)是一致的，不同但是因为dpr的不同，所以1个css像素所对应的物理像素个数是不一致的。  </p>
+<p>在普通屏幕下，1个css像素 对应 1个物理像素(1:1)。 在retina 屏幕下，1个css像素对应 4个物理像素(1:4)</p>
+<p>理论上，1个位图像素对应于1个物理像素，图片才能得到完美清晰的展示在普通屏幕下是没有问题的，但是在retina屏幕下就会出现位图像素点不够，从而导致图片模糊的情况。</p>
+<p>因为dpr的不同所以就导致了，css中写border：1px，在普通屏幕（1倍dpr）上对应的就是1px的border的大小，而在retina（2倍dpr或更高）屏幕下其实呈现出2px的问题</p>
+<h2 id="rem是什么？"><a href="#rem是什么？" class="headerlink" title="rem是什么？"></a>rem是什么？</h2><p>rem（font size of the root element）是指相对于根元素（html）的字体大小的单位。看到rem大家一定会想起em单位，em（font size of the element）是指相对于父元素的字体大小的单位。它们之间其实很相似，只不过 <strong> 一个计算的规则是依赖根元素一个是依赖父元素计算 </strong></p>
+<h1 id="二、移动端H5页面的适配与兼容"><a href="#二、移动端H5页面的适配与兼容" class="headerlink" title="二、移动端H5页面的适配与兼容"></a>二、移动端H5页面的适配与兼容</h1><p>拿到UI提供的视觉稿（750*1334标准来设计的）和标注和切图后，该如何入手做呢？  </p>
+<h3 id="1-设置html的meta标签（非常重要）"><a href="#1-设置html的meta标签（非常重要）" class="headerlink" title="1.设置html的meta标签（非常重要）"></a>1.设置html的meta标签（非常重要）</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>简单的理解，viewport是严格等于浏览器的窗口。在桌面浏览器中，viewport就是浏览器窗口的宽度高度。但在移动端设备上就有点复杂。移动端的viewport的设置，能够更好为CSS布局服务，使设备 虚拟的visual-viewport=布局的layout-viewport，页面的布局刚好铺满一屏，如果不设置这个meta标签页面会以很小的缩放比例呈现，浏览起来很困难</p>
+<h3 id="2-rem和px的单位的配合使用"><a href="#2-rem和px的单位的配合使用" class="headerlink" title="2.rem和px的单位的配合使用"></a>2.rem和px的单位的配合使用</h3><p>在rem单位没开始被使用之前，一般的做法是百分比、px为单位并配合 @media 查询来做，常用的@media 查询 是根据 <strong> 设备独立像素 </strong> 来做的适配</p>
+
       
     </div>
 
