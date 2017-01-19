@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>block内部结构 | 百灵鸟实验室 | 技术分享和研究</title>
+
+  
+  <meta name="author" content="larklab">
+  
+
+  
+  <meta name="description" content="block内部结构本文主页对block内部结构进行分析">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="block内部结构"/>
+
+  <meta property="og:site_name" content="百灵鸟实验室"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="百灵鸟实验室" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">百灵鸟实验室</a>
+    </h1>
+    <p class="site-description">技术分享和研究</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/categories/H5">H5</a></li>
+      
+        <li><a href="/categories/android">android</a></li>
+      
+        <li><a href="/categories/iOS">Ios</a></li>
+      
+        <li><a href="/categories/web">web</a></li>
+      
+        <li><a href="/categories/notes">公告</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>block内部结构</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/18/block分析/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-18T09:28:33.000Z">
+          2017-01-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="block内部结构"><a href="#block内部结构" class="headerlink" title="block内部结构"></a>block内部结构</h2><p>本文主页对block内部结构进行分析</p>
+<a id="more"></a>
+<p>我们先写一个block</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">void exampleBlock() &#123;</div><div class="line">	// NSConcreteStackBlock</div><div class="line">    int a = 1;</div><div class="line">    __block int b = 2;</div><div class="line">    int(^blockTest0)(int c) = ^(int c)&#123;</div><div class="line">        return a + b + c;</div><div class="line">    &#125;;</div><div class="line">    int c = 3;</div><div class="line">    blockTest0(c);</div><div class="line"></div><div class="line">    // NSConcreteGlobalBlock</div><div class="line">    void(^blockTest2)(void) = ^(void)&#123;</div><div class="line">        ;</div><div class="line">    &#125;;</div><div class="line">    blockTest2();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>用clang转成c分析下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">clang -rewrite-objc block.c</div></pre></td></tr></table></figure>
+<p>可以看到他们的定义是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">struct __exampleBlock_block_impl_0 &#123;</div><div class="line">  struct __block_impl impl;</div><div class="line">  struct __exampleBlock_block_desc_0* Desc;</div><div class="line">  int a;</div><div class="line">  __Block_byref_b_0 *b; // by ref</div><div class="line">  __exampleBlock_block_impl_0(void *fp, struct __exampleBlock_block_desc_0 *desc, int _a, __Block_byref_b_0 *_b, int flags=0) : a(_a), b(_b-&gt;__forwarding) &#123;</div><div class="line">    impl.isa = &amp;_NSConcreteStackBlock;</div><div class="line">    impl.Flags = flags;</div><div class="line">    impl.FuncPtr = fp;</div><div class="line">    Desc = desc;</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// __block_impl</div><div class="line">struct __block_impl &#123;</div><div class="line">  void *isa;</div><div class="line">  int Flags;</div><div class="line">  int Reserved;</div><div class="line">  void *FuncPtr;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// __exampleBlock_block_desc_0</div><div class="line">struct __exampleBlock_block_impl_0 &#123;</div><div class="line">  struct __block_impl impl;</div><div class="line">  struct __exampleBlock_block_desc_0* Desc;</div><div class="line">  int a;</div><div class="line">  __Block_byref_b_0 *b; // by ref</div><div class="line">  __exampleBlock_block_impl_0(void *fp, struct __exampleBlock_block_desc_0 *desc, int _a, __Block_byref_b_0 *_b, int flags=0) : a(_a), b(_b-&gt;__forwarding) &#123;</div><div class="line">    impl.isa = &amp;_NSConcreteStackBlock;</div><div class="line">    impl.Flags = flags;</div><div class="line">    impl.FuncPtr = fp;</div><div class="line">    Desc = desc;</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// __exampleBlock_block_impl_2</div><div class="line">struct __exampleBlock_block_impl_2 &#123;</div><div class="line">  struct __block_impl impl;</div><div class="line">  struct __exampleBlock_block_desc_2* Desc;</div><div class="line">  __exampleBlock_block_impl_2(void *fp, struct __exampleBlock_block_desc_2 *desc, int flags=0) &#123;</div><div class="line">    impl.isa = &amp;_NSConcreteStackBlock;</div><div class="line">    impl.Flags = flags;</div><div class="line">    impl.FuncPtr = fp;</div><div class="line">    Desc = desc;</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>初始化和执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">void exampleBlock() &#123;</div><div class="line">	// blockTest0</div><div class="line">    int a = 1;</div><div class="line">    __attribute__((__blocks__(byref))) __Block_byref_b_0 b = &#123;(void*)0,(__Block_byref_b_0 *)&amp;b, 0, sizeof(__Block_byref_b_0), 2&#125;;</div><div class="line"></div><div class="line">    int(*blockTest0)(int c) = (int (*)(int))&amp;__exampleBlock_block_impl_0((void *)__exampleBlock_block_func_0, &amp;__exampleBlock_block_desc_0_DATA, a, (__Block_byref_b_0 *)&amp;b, 570425344);</div><div class="line"></div><div class="line">    int c = 3;</div><div class="line">    ((int (*)(__block_impl *, int))((__block_impl *)blockTest0)-&gt;FuncPtr)((__block_impl *)blockTest0, c);</div><div class="line"></div><div class="line">	// blockTest2</div><div class="line">    void(*blockTest2)(void) = (void (*)())&amp;__exampleBlock_block_impl_2((void *)__exampleBlock_block_func_2, &amp;__exampleBlock_block_desc_2_DATA);</div><div class="line">    ((void (*)(__block_impl *))((__block_impl *)blockTest2)-&gt;FuncPtr)((__block_impl *)blockTest2);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们先看看blockTest2,它是由 结构体impl, 结构体Desc, 构造方法__exampleBlock_block_impl_2() 组成<br>展开后是</p>
+<ul>
+<li>*isa 指向该实例对象(代码里是_NSConcreteStackBlock,其实应该是_NSConcreteGlobalBlock)</li>
+<li>Flags 用于按bit位表示一些block的附加信息</li>
+<li>reserved 保留变量</li>
+<li>*FuncPtr 函数指针,指向具体的block实现的函数调用地址(代码里是__exampleBlock_block_func_2)</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">static void __exampleBlock_block_func_2(struct __exampleBlock_block_impl_2 *__cself) &#123;</div><div class="line">        ;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>size_t reserved 这个传进来的是0</li>
+<li>Block_size 结构体的大小</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static struct __exampleBlock_block_desc_2 &#123;</div><div class="line">  size_t reserved;</div><div class="line">  size_t Block_size;</div><div class="line">&#125; __exampleBlock_block_desc_2_DATA = &#123; 0, sizeof(struct __exampleBlock_block_impl_2)&#125;;</div></pre></td></tr></table></figure>
+<hr>
+<p>然后我们在看blockTest,它比blockTest2多了2个变量a, b</p>
+<ul>
+<li><p>int a; 外部变量a,</p>
+</li>
+<li><p><strong>Block_byref_b_0 *b; 加了block修饰的b, 传的是 </strong>Block_byref_b_0</p>
+</li>
+</ul>
+<p>在生成的初始化代码中则多了3个传入值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int(*blockTest0)(int c) = (int (*)(int))&amp;__exampleBlock_block_impl_0((void *)__exampleBlock_block_func_0, &amp;__exampleBlock_block_desc_0_DATA, a, (__Block_byref_b_0 *)&amp;b, 570425344);</div></pre></td></tr></table></figure>
+<ul>
+<li><p>a是这个是直接传值进去,然后被复制给 a</p>
+</li>
+<li><p>b是传的地址, 是把 __Block_byref_b_0 赋值给 b</p>
+</li>
+</ul>
+<p>__Block_byref_b_0这个结构体是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">struct __Block_byref_b_0 &#123;</div><div class="line">  void *__isa;</div><div class="line">__Block_byref_b_0 *__forwarding;</div><div class="line"> int __flags;</div><div class="line"> int __size;</div><div class="line"> int b;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p> __forwarding 是一个指向自己的指针.</p>
+<p>__Block_byref_b_0 的初始化代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">__attribute__((__blocks__(byref))) __Block_byref_b_0 b = &#123;(void*)0,(__Block_byref_b_0 *)&amp;b, 0, sizeof(__Block_byref_b_0), 2&#125;;</div></pre></td></tr></table></figure>
+<p> 我们可以看出a是直接复制进去的,b是被转到了一个结构体里,然后吧这个结构体的指针传进去,所以block不能修改a,能修改b.</p>
+<ul>
+<li>570425344 这个应该是传给Flags</li>
+</ul>
+<p>blockTest0的Desc和blockTest2也有所不同,展开后是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">static struct __exampleBlock_block_desc_0 &#123;</div><div class="line">  size_t reserved;</div><div class="line">  size_t Block_size;</div><div class="line">  void (*copy)(struct __exampleBlock_block_impl_0*, struct __exampleBlock_block_impl_0*);</div><div class="line">  void (*dispose)(struct __exampleBlock_block_impl_0*);</div><div class="line">&#125; __exampleBlock_block_desc_0_DATA = &#123; 0, sizeof(struct __exampleBlock_block_impl_0), __exampleBlock_block_copy_0, __exampleBlock_block_dispose_0&#125;;</div></pre></td></tr></table></figure>
+<p>多了2个函数指针copy, dispose,对于在调用前后修改相应变量的引用计数, 分别指向</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">static void __exampleBlock_block_copy_0(struct __exampleBlock_block_impl_0*dst, struct __exampleBlock_block_impl_0*src) &#123;_Block_object_assign((void*)&amp;dst-&gt;b, (void*)src-&gt;b, 8/*BLOCK_FIELD_IS_BYREF*/);&#125;</div><div class="line"></div><div class="line">static void __exampleBlock_block_dispose_0(struct __exampleBlock_block_impl_0*src) &#123;_Block_object_dispose((void*)src-&gt;b, 8/*BLOCK_FIELD_IS_BYREF*/);&#125;</div></pre></td></tr></table></figure>
+<p> 再来看下blockTest0的*FuncPtr</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">static int __exampleBlock_block_func_0(struct __exampleBlock_block_impl_0 *__cself, int c) &#123;</div><div class="line"> __Block_byref_b_0 *b = __cself-&gt;b; // bound by ref</div><div class="line"> int a = __cself-&gt;a; // bound by copy</div><div class="line"></div><div class="line">       return a + (b-&gt;__forwarding-&gt;b) + c;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>可以看出a用的是拷贝进来的a, b用的是结构体里的b</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/iOS/">iOS</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2017 larklab
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

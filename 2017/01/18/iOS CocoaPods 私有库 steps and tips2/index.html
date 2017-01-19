@@ -1,0 +1,234 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS CocoaPods 私有库 steps and tips | 百灵鸟实验室 | 技术分享和研究</title>
+
+  
+  <meta name="author" content="larklab">
+  
+
+  
+  <meta name="description" content="iOS CocoaPods 私有库 steps and tips这篇文章记录了下cocoapods私有库的一些steps和tips.
+
+如何创建私有仓库
+如何创建私有库">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="iOS CocoaPods 私有库 steps and tips"/>
+
+  <meta property="og:site_name" content="百灵鸟实验室"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="百灵鸟实验室" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">百灵鸟实验室</a>
+    </h1>
+    <p class="site-description">技术分享和研究</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/categories/H5">H5</a></li>
+      
+        <li><a href="/categories/android">android</a></li>
+      
+        <li><a href="/categories/iOS">Ios</a></li>
+      
+        <li><a href="/categories/web">web</a></li>
+      
+        <li><a href="/categories/notes">公告</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>iOS CocoaPods 私有库 steps and tips</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/18/iOS CocoaPods 私有库 steps and tips2/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-18T09:28:33.000Z">
+          2017-01-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="iOS-CocoaPods-私有库-steps-and-tips"><a href="#iOS-CocoaPods-私有库-steps-and-tips" class="headerlink" title="iOS CocoaPods 私有库 steps and tips"></a>iOS CocoaPods 私有库 steps and tips</h1><p>这篇文章记录了下cocoapods私有库的一些steps和tips.</p>
+<ul>
+<li>如何创建私有仓库</li>
+<li>如何创建私有库</li>
+</ul>
+<a id="more"></a>
+<h1 id="iOS-CocoaPods-私有库-steps-and-tips-1"><a href="#iOS-CocoaPods-私有库-steps-and-tips-1" class="headerlink" title="iOS CocoaPods 私有库 steps and tips"></a>iOS CocoaPods 私有库 steps and tips</h1><p>这篇文章记录了下cocoapods私有库的一些steps和tips.</p>
+<ul>
+<li>如何创建私有仓库</li>
+<li>如何创建私有库</li>
+<li>如何更新发布私有库</li>
+<li>如何使用私有库</li>
+</ul>
+<h1 id="如何创建私有仓库"><a href="#如何创建私有仓库" class="headerlink" title="如何创建私有仓库"></a>如何创建私有仓库</h1><h2 id="steps"><a href="#steps" class="headerlink" title="steps"></a>steps</h2><p>先随便在网上创建一个仓库, 然后在本地添加那个那个仓库.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod repo add PHSpecs http://pagit.paic.com.cn/PHiOSFootstone/PHSpecs.git</div></pre></td></tr></table></figure>
+<h1 id="如何创建私有库"><a href="#如何创建私有库" class="headerlink" title="如何创建私有库"></a>如何创建私有库</h1><h2 id="steps-1"><a href="#steps-1" class="headerlink" title="steps"></a>steps</h2><ul>
+<li>创建私有库模板</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod lib create VenderName</div></pre></td></tr></table></figure>
+<p>创建模板的时候会问你要用什么语言, 要不要自带测试框架什么的.</p>
+<p>生成的模板结构如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">$ tree VenderName -L 2</div><div class="line">VenderName</div><div class="line">├── Example                                   #demo APP</div><div class="line">│   ├── VenderName</div><div class="line">│   ├── VenderName.xcodeproj</div><div class="line">│   ├── VenderName.xcworkspace</div><div class="line">│   ├── Podfile                               #demo APP 的依赖描述文件</div><div class="line">│   ├── Podfile.lock</div><div class="line">│   ├── Pods                                   #demo APP 的依赖文件</div><div class="line">│   └── Tests</div><div class="line">├── LICENSE                                #开源协议 默认MIT</div><div class="line">├── Pod                                        #组件的目录</div><div class="line">│   ├── Assets                             #资源文件</div><div class="line">│   └── Classes                               #类文件</div><div class="line">├── VenderName.podspec            #第三步要创建的podspec文件</div><div class="line">└── README.md                                 #markdown格式的README</div><div class="line">9 directories, 5 files</div></pre></td></tr></table></figure>
+<h2 id="tips"><a href="#tips" class="headerlink" title="tips"></a>tips</h2><ul>
+<li>引用静态库：’(.ios).library’。去掉头尾的lib，用”,”分割</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 引用libxml2.lib和libz.lib.</div><div class="line">spec.libraries =  &apos;xml2&apos;, &apos;z&apos;</div></pre></td></tr></table></figure>
+<ul>
+<li>引用公有framework：’(.ios).framework’. 用”,”分割. 去掉尾部的”.framework”</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">spec.frameworks = &apos;UIKit&apos;,&apos;SystemConfiguration&apos;, &apos;Accelerate&apos;</div></pre></td></tr></table></figure>
+<ul>
+<li>引用自己生成的framework：’(.ios).vendored_frameworks’。用”,”分割<br>路径写从.podspec所在目录为根目录的相对路径 ps:这个不要省略.framework</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">spec.ios.vendored_frameworks = &apos;Pod/Assets/*.framework&apos;</div></pre></td></tr></table></figure>
+<ul>
+<li>引用自己生成的.a文件, 添加到Pod/Assets文件夹里. Demo的Example文件夹里也需要添加一下, 不然找不到<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">spec.ios.vendored_libraries = &apos;Pod/Assets/*.a&apos;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在提交到私有仓库的时候需要加上<code>--use-libraries</code></p>
+<h1 id="如何更新发布私有库"><a href="#如何更新发布私有库" class="headerlink" title="如何更新发布私有库"></a>如何更新发布私有库</h1><h2 id="steps-2"><a href="#steps-2" class="headerlink" title="steps"></a>steps</h2><ul>
+<li>提交代码</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git add -A &amp;&amp; git commit -m &quot;Release 1.0.0&quot;</div></pre></td></tr></table></figure>
+<ul>
+<li>打tag</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git tag &apos;1.0.0&apos;</div></pre></td></tr></table></figure>
+<ul>
+<li>把tag推到远程仓库</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git push --tags</div></pre></td></tr></table></figure>
+<ul>
+<li>将本地的master分支推送到远程仓库</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git push origin master</div></pre></td></tr></table></figure>
+<ul>
+<li>提交到私有仓库</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pod repo push PHSpecs VenderName.podspec --allow-warnings --verbose</div><div class="line">// --allow-warnings : 允许 警告，有一些警告是代码自身带的。</div><div class="line">// --use-libraries  : 私有库、静态库引用的时候加上</div><div class="line">// —verbose ： lint显示详情</div></pre></td></tr></table></figure>
+<h2 id="tips-1"><a href="#tips-1" class="headerlink" title="tips"></a>tips</h2><p>提交到私有仓库的之前可以先验证一下, 有问题就修复它, 验证过了在提交</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod spec lint VenderName.podspec --verbose</div></pre></td></tr></table></figure>
+<p>打好tag, 推到git里去后, <code>才可以</code>在测试的项目里的Podfile里引用这个库, 然后 <code>pod update VenderName --no-repo-update</code>, 测试通过了, 在提交到私有仓库里</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod &apos;VenderName&apos;, :podspec =&gt; &apos;/Users/heaven/Desktop/work/VenderName/VenderName.podspec&apos;</div></pre></td></tr></table></figure>
+<p>还可以指定引用某个分支的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod &apos;VenderName&apos;, :git =&gt; &apos;https://github.com/PHiOSFootstone/VenderName.git&apos;, :branch =&gt; &apos;develop&apos;</div></pre></td></tr></table></figure>
+<p>提交到私有仓库的时候还可以忽略警告类的错误, 愣是要提交. 在后面加上 <code>--allow-warnings</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod repo push PHSpecs VenderName.podspec --allow-warnings</div></pre></td></tr></table></figure>
+<p>如果有添加新的文件, 需要更新下引索, demo里才可以识别</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod update VenderName --no-repo-update</div></pre></td></tr></table></figure>
+<ul>
+<li>资源用bundle, 添加到Pod/Assets文件夹里. Demo的Example文件夹里也需要添加一下, 不然找不到</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// podspec里</div><div class="line">s.resources = &quot;Pod/Assets/*&quot;</div><div class="line"></div><div class="line">// 代码里</div><div class="line">[UIImage imageNamed:@&quot;VenderName.bundle/pic1.png&quot;]</div></pre></td></tr></table></figure>
+<h1 id="如何使用私有库"><a href="#如何使用私有库" class="headerlink" title="如何使用私有库"></a>如何使用私有库</h1><h2 id="steps-3"><a href="#steps-3" class="headerlink" title="steps"></a>steps</h2><ul>
+<li>添加私有仓库</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod repo add PHSpecs http://pagit.paic.com.cn/PHiOSFootstone/PHSpecs.git</div></pre></td></tr></table></figure>
+<ul>
+<li>用的时候需要在Podfile里添加源</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// github地址</div><div class="line">source &apos;https://github.com/CocoaPods/Specs.git&apos;</div><div class="line"># ...相关库</div><div class="line"></div><div class="line">// 私有库地址</div><div class="line">source &apos;http://pagit.paic.com.cn/PHiOSFootstone/PHSpecs.git&apos;</div><div class="line"># ...私有库</div></pre></td></tr></table></figure>
+<ul>
+<li>用的时候在Podfile里引用</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod &apos;VenderName&apos;</div></pre></td></tr></table></figure>
+<h2 id="tips-2"><a href="#tips-2" class="headerlink" title="tips"></a>tips</h2><p>使用的时候还可以通过直接指定地址 + tag or 分支 or commit 的方式来引入, 这样就可以不用走发布流程了. 也不需要添加源了.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">pod &apos;VenderName&apos;, :git =&gt; &apos;http://pagit.paic.com.cn/PHiOSFootstone/VenderName.git&apos;, :tag =&gt; &apos;0.7.0&apos;</div><div class="line"></div><div class="line">pod &apos;VenderName&apos;, :git =&gt; &apos;http://pagit.paic.com.cn/PHiOSFootstone/VenderName.git&apos;, :branch =&gt; &apos;develop&apos;</div><div class="line"></div><div class="line">pod &apos;VenderName&apos;, :git =&gt; &apos;http://pagit.paic.com.cn/PHiOSFootstone/VenderName.git&apos;, :commit =&gt; &apos;082f8319af&apos;</div></pre></td></tr></table></figure>
+<p>查看私有仓库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cd ~/.cocoapods/repos/</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/iOS/">iOS</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2017 larklab
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

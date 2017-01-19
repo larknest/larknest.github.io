@@ -51,7 +51,7 @@
       
         <li><a href="/categories/android">android</a></li>
       
-        <li><a href="/categories/ios">ios</a></li>
+        <li><a href="/categories/iOS">Ios</a></li>
       
         <li><a href="/categories/web">web</a></li>
       
@@ -173,13 +173,13 @@
 
   
     
-    <h3 class="article-title"><a href="/2017/01/18/ios/"><span>ios</span></a></h3>
+    <h3 class="article-title"><a href="/2017/01/18/block分析/"><span>block内部结构</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2017/01/18/ios/" rel="bookmark">
+      <a href="/2017/01/18/block分析/" rel="bookmark">
         <time class="entry-date published" datetime="2017-01-18T09:28:33.000Z">
           2017-01-18
         </time>
@@ -193,7 +193,7 @@
   <div class="article-content">
     <div class="entry">
       
-        
+        <h2 id="block内部结构"><a href="#block内部结构" class="headerlink" title="block内部结构"></a>block内部结构</h2><p>本文主页对block内部结构进行分析</p>
       
     </div>
 
@@ -207,7 +207,279 @@
 
     <span class="post-categories">
       <i class="icon-categories"></i>
-        <a href="/categories/ios/">ios</a>
+        <a href="/categories/iOS/">iOS</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/01/18/iOS CocoaPods 私有库 steps and tips2/"><span>iOS CocoaPods 私有库 steps and tips</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/18/iOS CocoaPods 私有库 steps and tips2/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-18T09:28:33.000Z">
+          2017-01-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="iOS-CocoaPods-私有库-steps-and-tips"><a href="#iOS-CocoaPods-私有库-steps-and-tips" class="headerlink" title="iOS CocoaPods 私有库 steps and tips"></a>iOS CocoaPods 私有库 steps and tips</h1><p>这篇文章记录了下cocoapods私有库的一些steps和tips.</p>
+<ul>
+<li>如何创建私有仓库</li>
+<li>如何创建私有库</li>
+</ul>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/iOS/">iOS</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/01/18/iOS_精益编程/"><span>iOS 精益编程</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/18/iOS_精益编程/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-18T09:28:33.000Z">
+          2017-01-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="开场"><a href="#开场" class="headerlink" title="开场"></a>开场</h1><p>今天, 我们将从一个小功能开始, 先去不假思索的实现它</p>
+<ul>
+<li>Product Repository: Filtering Operation</li>
+</ul>
+<h1 id="Code-start"><a href="#Code-start" class="headerlink" title="Code start"></a>Code start</h1><p>有一个产品库, 我们要对它做过滤操作.</p>
+<p>第一个需求并不复杂.</p>
+<ul>
+<li>需求1：在仓库中查找所有颜色为<code>红色</code>的产品</li>
+</ul>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/iOS/">iOS</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/01/18/NSObject 的实现分析/"><span>iOS中的delegated的用法和规范</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/18/NSObject 的实现分析/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-18T09:28:33.000Z">
+          2017-01-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="NSObject-的实现分析"><a href="#NSObject-的实现分析" class="headerlink" title="NSObject 的实现分析"></a>NSObject 的实现分析</h1><p>iOS 的 NSObject 类没有开源, 但是呢 runtime开源了,里面有个类 Object 看接口和NSObject差不多,下面我就对着 Object 的代码来分析下 NSObject<br>runtime代码在<a href="http://opensource.apple.com/tarballs/objc4/objc4-493.9.tar.gz">http://opensource.apple.com/tarballs/objc4/objc4-493.9.tar.gz</a>下载,<br>Object在<Object.h>, 这里的文件夹写着Obsolete, 呃.<br>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/iOS/">iOS</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/01/18/iOS中的delegate/"><span>iOS中的delegated的用法和规范</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/18/iOS中的delegate/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-18T09:28:33.000Z">
+          2017-01-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="iOS中的delegated的用法和规范"><a href="#iOS中的delegated的用法和规范" class="headerlink" title="iOS中的delegated的用法和规范"></a>iOS中的delegated的用法和规范</h1><p>delegate是Objective-C编写的应用中各种对象之间互相调用的主要方式之一. 通常情况下, 对象可以接收的消息都通过在接口文件中声明的方法来表示.</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/iOS/">iOS</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2017/01/18/iOS下的dao层实现代码/"><span>iOS下的dao层实现代码</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/18/iOS下的dao层实现代码/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-18T09:28:33.000Z">
+          2017-01-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="iOS下的dao层实现代码"><a href="#iOS下的dao层实现代码" class="headerlink" title="iOS下的dao层实现代码"></a>iOS下的dao层实现代码</h2><h4 id="什么是dao层"><a href="#什么是dao层" class="headerlink" title="什么是dao层"></a>什么是dao层</h4><p>DAO (Data Access Object) 数据访问对象是一个面向对象的接口. 直接操作数据库, 针对数据的增添,删除,修改,查找,具体为业务逻辑层或表示层提供数据服务.</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/iOS/">iOS</a>
     </span>
     
 
@@ -311,6 +583,7 @@
 <h3 id="1-设置html的meta标签（非常重要）"><a href="#1-设置html的meta标签（非常重要）" class="headerlink" title="1.设置html的meta标签（非常重要）"></a>1.设置html的meta标签（非常重要）</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>简单的理解，viewport是严格等于浏览器的窗口。在桌面浏览器中，viewport就是浏览器窗口的宽度高度。但在移动端设备上就有点复杂。移动端的viewport的设置，能够更好为CSS布局服务，使设备 虚拟的visual-viewport=布局的layout-viewport，页面的布局刚好铺满一屏，如果不设置这个meta标签页面会以很小的缩放比例呈现，浏览起来很困难</p>
 <h3 id="2-rem和px的单位的配合使用"><a href="#2-rem和px的单位的配合使用" class="headerlink" title="2.rem和px的单位的配合使用"></a>2.rem和px的单位的配合使用</h3><p>在rem单位没开始被使用之前，一般的做法是百分比、px为单位并配合 @media 查询来做，常用的@media 查询 是根据 <strong> 设备独立像素 </strong> 来做的适配</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@@<span class="keyword">media</span> screen and(min-width:<span class="number">320px</span>) and (max-width:<span class="number">375px</span>) &#123;</div><div class="line">  <span class="selector-tag">body</span> &#123;</div><div class="line">    <span class="attribute">font-size</span>: <span class="number">75px</span>;</div><div class="line">  &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -339,63 +612,11 @@
 
 
 
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2017/01/16/hello-world/"><span>Hello World</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2017/01/16/hello-world/" rel="bookmark">
-        <time class="entry-date published" datetime="2017-01-16T11:22:09.000Z">
-          2017-01-16
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
 
 <nav class="pagination">
   
+  
+  <a href="/page/2/" class="pagination-next">下一页</a>
   
 </nav>
     </main>

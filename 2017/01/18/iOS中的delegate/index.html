@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS中的delegated的用法和规范 | 百灵鸟实验室 | 技术分享和研究</title>
+
+  
+  <meta name="author" content="larklab">
+  
+
+  
+  <meta name="description" content="iOS中的delegated的用法和规范delegate是Objective-C编写的应用中各种对象之间互相调用的主要方式之一. 通常情况下, 对象可以接收的消息都通过在接口文件中声明的方法来表示.">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="iOS中的delegated的用法和规范"/>
+
+  <meta property="og:site_name" content="百灵鸟实验室"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="百灵鸟实验室" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">百灵鸟实验室</a>
+    </h1>
+    <p class="site-description">技术分享和研究</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/categories/H5">H5</a></li>
+      
+        <li><a href="/categories/android">android</a></li>
+      
+        <li><a href="/categories/iOS">Ios</a></li>
+      
+        <li><a href="/categories/web">web</a></li>
+      
+        <li><a href="/categories/notes">公告</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>iOS中的delegated的用法和规范</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/18/iOS中的delegate/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-18T09:28:33.000Z">
+          2017-01-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="iOS中的delegated的用法和规范"><a href="#iOS中的delegated的用法和规范" class="headerlink" title="iOS中的delegated的用法和规范"></a>iOS中的delegated的用法和规范</h1><p>delegate是Objective-C编写的应用中各种对象之间互相调用的主要方式之一. 通常情况下, 对象可以接收的消息都通过在接口文件中声明的方法来表示.</p>
+<a id="more"></a>
+<h1 id="iOS中的delegated的用法和规范-1"><a href="#iOS中的delegated的用法和规范-1" class="headerlink" title="iOS中的delegated的用法和规范"></a>iOS中的delegated的用法和规范</h1><p>delegate是Objective-C编写的应用中各种对象之间互相调用的主要方式之一. 通常情况下, 对象可以接收的消息都通过在接口文件中声明的方法来表示.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@protocol MyProtocol &lt;NSObject&gt;</div><div class="line">- (void)func;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<h2 id="什么是delegate"><a href="#什么是delegate" class="headerlink" title="什么是delegate"></a>什么是delegate</h2><p>delegate是委托模式.委托模式是将一件属于委托者做的事情，交给另外一个被委托者来处理.<br>一个标准的委托由以下部分组成:</p>
+<h3 id="协议的声明"><a href="#协议的声明" class="headerlink" title="协议的声明"></a>协议的声明</h3><p>我们需要用协议来申明哪些方法是被委托出去了.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@protocol  MyUIViewDelegate &lt;NSObject&gt;</div><div class="line">- (void)func;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<h3 id="委托者申明一个属性"><a href="#委托者申明一个属性" class="headerlink" title="委托者申明一个属性"></a>委托者申明一个属性</h3><p>委托者里得有一个属性代表被委托者, 注意这个属性是弱引用.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@interface  MyUIView： UIView</div><div class="line">@property(nonatomic, weak) id&lt;MyUIViewDelegate&gt; delegate;</div></pre></td></tr></table></figure>
+<h3 id="被委托者声明实现了协议"><a href="#被委托者声明实现了协议" class="headerlink" title="被委托者声明实现了协议"></a>被委托者声明实现了协议</h3><p>被委托者需要声明自己实现了委托里的协议.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@interface MyUIViewController : UIViewController &lt;MyUIViewDelegate&gt;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<h3 id="设置委托"><a href="#设置委托" class="headerlink" title="设置委托"></a>设置委托</h3><p>在被委托者里设置自己是委托者的被委托者.嘛,这句话是有些绕.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// viewcontroller. m中</div><div class="line">- (id)init</div><div class="line">&#123;</div><div class="line">	MyUIView *myView = [[MyUIView alloc] init];  //对MyUIView进行初始化</div><div class="line">	myView.delegate = self;   // 将MyUIViewController自己的实例作为委托对象</div><div class="line">	self.view = myView;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="委托事件"><a href="#委托事件" class="headerlink" title="委托事件"></a>委托事件</h3><p>在委托者里调用委托的方法.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// MyUIView.m中</div><div class="line">- (void)doSomething</div><div class="line">&#123;</div><div class="line">	[self.delegate func];  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="delegate的用途"><a href="#delegate的用途" class="headerlink" title="delegate的用途"></a>delegate的用途</h2><p>委托一般可以分成3种</p>
+<h3 id="传递事件"><a href="#传递事件" class="headerlink" title="传递事件"></a>传递事件</h3><p>传递事件就是A发生了什么事情, 希望B知道下, 然后B在自己的类里面要做出某些反应.典型的如<br><code>tableView:didSelectRowAtIndexPath:</code>, 就是UITableView点击了某个cell的时候, 希望其它类(通常是ViewController)响应这个点击, 在点击的时候跳转到其他viewController之类的.</p>
+<h3 id="确定事件可执行"><a href="#确定事件可执行" class="headerlink" title="确定事件可执行"></a>确定事件可执行</h3><p>确定事件可执行是当A需要执行某个事件的时候, A不确定到底可执行, 这个时候希望B能回应下. 如<code>tableView:shouldHighlightRowAtIndexPath:</code>是UITableView询问其它类要不要高亮显示某个cell, 当返回NO的时候, 就UITableView就不会执行cell的高亮方法.</p>
+<h3 id="传递值"><a href="#传递值" class="headerlink" title="传递值"></a>传递值</h3><p>传递值是当A需要某个数据的时候, 由B来提供. 例子还是UITableView里的,<code>tableView:cellForRowAtIndexPath:</code>是需要某个cell的时候由其他类提供这个cell.</p>
+<h2 id="委托命名"><a href="#委托命名" class="headerlink" title="委托命名"></a>委托命名</h2><h3 id="委托"><a href="#委托" class="headerlink" title="委托"></a>委托</h3><p>通常的委托用delegate做后缀.如<code>&lt;UIScrollViewDelegate&gt;</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@protocol &lt;#class#&gt;Delegate</div></pre></td></tr></table></figure>
+<h3 id="数据源"><a href="#数据源" class="headerlink" title="数据源"></a>数据源</h3><p>当你的委托的方法过多, 可以拆分数据部分和其他逻辑部分, 数据部分用dataSource做后缀. 如<code>&lt;UITableViewDataSource, UITableViewDelegate&gt;</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@protocol &lt;#class#&gt;DataSource</div></pre></td></tr></table></figure>
+<h2 id="方法修饰"><a href="#方法修饰" class="headerlink" title="方法修饰"></a>方法修饰</h2><p>委托的方法不是百分百必须实现的.</p>
+<h3 id="必须实现的方法"><a href="#必须实现的方法" class="headerlink" title="必须实现的方法"></a>必须实现的方法</h3><p>用required修饰的方法是必须实现的.协议默认声明在其中的方法为必须实现的方法.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@protocol MyProtocol &lt;NSObject&gt;</div><div class="line"></div><div class="line">@required</div><div class="line">- (void)func;</div><div class="line"></div><div class="line">@end</div><div class="line"></div><div class="line">// 用的时候</div><div class="line">- (void)doSomething</div><div class="line">&#123;</div><div class="line">	[_delegate &lt;#func2#&gt;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="可以实现的方法"><a href="#可以实现的方法" class="headerlink" title="可以实现的方法"></a>可以实现的方法</h3><p>用optional修饰的方法可以不实现. 在用到的时候需要先判断方法是否存在</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">@protocol MyProtocol &lt;NSObject&gt;</div><div class="line"></div><div class="line">@optional</div><div class="line">- (void)func;</div><div class="line"></div><div class="line">@end</div><div class="line"></div><div class="line">// 用的时候</div><div class="line">- (void)doSomething</div><div class="line">&#123;</div><div class="line">	if (_delegate respondsToSelector:@selector(&lt;#func2#&gt;))</div><div class="line">	&#123;</div><div class="line">		[_delegate &lt;#func2#&gt;];</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="方法命名"><a href="#方法命名" class="headerlink" title="方法命名"></a>方法命名</h2><p>当特定的事件发生时, 对象会触发它注册的委托方法.</p>
+<p>委托的方法, 第一个参数是触发它的对象，第一个关键词是触发对象的类名, 错误的状态必须带有error信息, 其他的参数看实际情况. 根据委托方法触发的时机和目的, 使用should,will,did等关键词.更具事件的状态, 使用finish, fail, start等关键词.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row;</div></pre></td></tr></table></figure>
+<h3 id="完成"><a href="#完成" class="headerlink" title="完成"></a>完成</h3><p>finish表示一个事件已经完成, 通常情况下我们默认是成功.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (void)&lt;#class#&gt;DidFinish&lt;#event#&gt;:(id)class</div></pre></td></tr></table></figure>
+<h3 id="失败"><a href="#失败" class="headerlink" title="失败"></a>失败</h3><p>fail表示一个事件已经失败了, 我们在这里需要返回错误的原因.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (void)&lt;#class#&gt;:(id)class didFail&lt;#event#&gt;:(NSError *)error</div></pre></td></tr></table></figure>
+<h3 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h3><p>start标志一个事件的开始.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (void)&lt;#class#&gt;DidStart&lt;#event#&gt;:(id)class</div></pre></td></tr></table></figure>
+<h3 id="将要开始"><a href="#将要开始" class="headerlink" title="将要开始"></a>将要开始</h3><p>should表示某事件将要开始.同意开始则返回YES, 否则返回NO</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (BOOL)&lt;#class#&gt;ShouldStart&lt;#event#&gt;:(id)class</div></pre></td></tr></table></figure>
+<h2 id="多播委托"><a href="#多播委托" class="headerlink" title="多播委托"></a>多播委托</h2><p>通常的委托只支持一对一的委托, 但是在某些场景下, 我们希望有多个被委托者. 这种场景下可以考虑使用多播委托.</p>
+<p>多播委托的实现类在XYMulticastDelegate, <a href="https://github.com/uxyheaven/XYQuick/tree/master/XYQuick/event/modules" target="_blank" rel="external">https://github.com/uxyheaven/XYQuick/tree/master/XYQuick/event/modules</a>.<br>他是copy form XMPP的GCDMulticastDelegate.</p>
+<p>每个多播委托的委托者类建议有以下的基本描述</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// .h</div><div class="line">// 多播委托, 建议加上你的协议修饰: -(id &lt;InAppPurchasesServiceProtocol&gt;)multicastDelggate;</div><div class="line">- (id)multicastDelggate;</div><div class="line">- (void)addDelegate:(id)delegate;</div><div class="line">- (void)removeDelegate:(id)delegate;</div><div class="line">- (void)removeAllDelegates;</div></pre></td></tr></table></figure>
+<p>实现文件里, 你需要这么写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">// .m</div><div class="line">- (void)addDelegate:(id)delegate</div><div class="line">&#123;</div><div class="line">    [_multicastDelggate addDelegate:delegate delegateQueue:dispatch_get_main_queue()];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)removeDelegate:(id)delegate</div><div class="line">&#123;</div><div class="line">    [_multicastDelggate removeDelegate:delegate];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)removeAllDelegates</div><div class="line">&#123;</div><div class="line">    [_multicastDelggate removeAllDelegates];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其他的用法和普通的delegate类似</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">// 协议</div><div class="line">@protocol InAppPurchasesServiceProtocol &lt;NSObject&gt;</div><div class="line">@optional</div><div class="line">/**</div><div class="line"> * @brief callback for update product list succeed</div><div class="line"> */</div><div class="line">-(void)inAppPurchasesService:(InAppPurchasesService *)service didUpdatedProducts:(NSArray *)array;</div><div class="line"></div><div class="line">// 用的时候</div><div class="line">[self.multicastDelggate inAppPurchasesService:self didUpdatedProductsFailed:error];</div></pre></td></tr></table></figure>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p><a href="http://www.jianshu.com/p/b6434c2997d1" target="_blank" rel="external">http://www.jianshu.com/p/b6434c2997d1</a><br><a href="http://leopard168.blog.163.com/blog/static/168471844201306114533858/" target="_blank" rel="external">http://leopard168.blog.163.com/blog/static/168471844201306114533858/</a><br><a href="https://github.com/robbiehanson/XMPPFramework" target="_blank" rel="external">https://github.com/robbiehanson/XMPPFramework</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/iOS/">iOS</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2017 larklab
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

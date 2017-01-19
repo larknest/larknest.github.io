@@ -1,0 +1,264 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS 精益编程 | 百灵鸟实验室 | 技术分享和研究</title>
+
+  
+  <meta name="author" content="larklab">
+  
+
+  
+  <meta name="description" content="开场今天, 我们将从一个小功能开始, 先去不假思索的实现它
+
+Product Repository: Filtering Operation
+
+Code start有一个产品库, 我们要对它做过滤操作.
+第一个需求并不复杂.
+
+需求1：在仓库中查找所有颜色为红色的产品">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="iOS 精益编程"/>
+
+  <meta property="og:site_name" content="百灵鸟实验室"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="百灵鸟实验室" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">百灵鸟实验室</a>
+    </h1>
+    <p class="site-description">技术分享和研究</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/categories/H5">H5</a></li>
+      
+        <li><a href="/categories/android">android</a></li>
+      
+        <li><a href="/categories/iOS">Ios</a></li>
+      
+        <li><a href="/categories/web">web</a></li>
+      
+        <li><a href="/categories/notes">公告</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>iOS 精益编程</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/18/iOS_精益编程/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-18T09:28:33.000Z">
+          2017-01-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="开场"><a href="#开场" class="headerlink" title="开场"></a>开场</h1><p>今天, 我们将从一个小功能开始, 先去不假思索的实现它</p>
+<ul>
+<li>Product Repository: Filtering Operation</li>
+</ul>
+<h1 id="Code-start"><a href="#Code-start" class="headerlink" title="Code start"></a>Code start</h1><p>有一个产品库, 我们要对它做过滤操作.</p>
+<p>第一个需求并不复杂.</p>
+<ul>
+<li>需求1：在仓库中查找所有颜色为<code>红色</code>的产品</li>
+</ul>
+<a id="more"></a>
+<h1 id="开场-1"><a href="#开场-1" class="headerlink" title="开场"></a>开场</h1><p>今天, 我们将从一个小功能开始, 先去不假思索的实现它</p>
+<ul>
+<li>Product Repository: Filtering Operation</li>
+</ul>
+<h1 id="Code-start-1"><a href="#Code-start-1" class="headerlink" title="Code start"></a>Code start</h1><p>有一个产品库, 我们要对它做过滤操作.</p>
+<p>第一个需求并不复杂.</p>
+<ul>
+<li>需求1：在仓库中查找所有颜色为<code>红色</code>的产品</li>
+</ul>
+<h2 id="First-Attempt-Hard-Code"><a href="#First-Attempt-Hard-Code" class="headerlink" title="First Attempt: Hard Code"></a>First Attempt: Hard Code</h2><p>我们先用最简单的方式去实现它, 硬编码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (NSArray *)findAllRedProducts:(NSArray *)products</div><div class="line">&#123;</div><div class="line">    NSMutableArray *list = [@[] mutableCopy];</div><div class="line">    for (Product *product in products) &#123;</div><div class="line">        if (product.color == RED) &#123;</div><div class="line">            [list addObject:product];</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return list;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果这个世界是永恒静止的，这样的实现无可厚非，但世界往往并非如此。</p>
+<p>紧接着,第二个需求来了</p>
+<ul>
+<li>需求2：在仓库中查找所有颜色为<code>绿色</code>的产品</li>
+</ul>
+<h2 id="Second-Attempt-Parameterizing"><a href="#Second-Attempt-Parameterizing" class="headerlink" title="Second Attempt: Parameterizing"></a>Second Attempt: Parameterizing</h2><p><code>Copy-Paste</code>是大部分程序员最容易犯的毛病，为此引入了大量的重复代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (NSArray *)findAllGreenProducts:(NSArray *)products</div><div class="line">&#123;</div><div class="line">    NSMutableArray *list = [@[] mutableCopy];</div><div class="line">    for (Product *product in products) &#123;</div><div class="line">        if (product.color == GREEN) &#123;</div><div class="line">            [list addObject:product];</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return list;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>为了消灭硬编码，得到可重用的代码，可以引入简单的<code>参数化</code>设计。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (NSArray *)findProducts:(NSArray *)products byColor:(ProductColor)color</div><div class="line">&#123;</div><div class="line">    NSMutableArray *list = [@[] mutableCopy];</div><div class="line">    for (Product *product in products) &#123;</div><div class="line">        if (product.color == color) &#123;</div><div class="line">            [list addObject:product];</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return list;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>终于可以放心了, 这个时候我们的产品经理怎么可能让你舒服呢,需求3又来了</p>
+<ul>
+<li>需求3：查找所有重量小于10的所有产品</li>
+</ul>
+<h2 id="Third-Attempt-Parameterizing-with-Every-Attribute-You-Can-Think-Of"><a href="#Third-Attempt-Parameterizing-with-Every-Attribute-You-Can-Think-Of" class="headerlink" title="Third Attempt: Parameterizing with Every Attribute You Can Think Of"></a>Third Attempt: Parameterizing with Every Attribute You Can Think Of</h2><p>大部分程序员依然会使用<code>Copy-Paste</code>解决这个问题，拒绝<code>Copy-Paste</code>的陋习，最具实效的一个反馈就是让这个快捷键失效，从而在每次尝试<code>Copy-Paste</code>时提醒自己做更好的设计。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (NSArray *)findProducts:(NSArray *)products byWeith:(float)weight</div><div class="line">&#123;</div><div class="line">    NSMutableArray *list = [@[] mutableCopy];</div><div class="line">    for (Product *product in products) &#123;</div><div class="line">        if (product.weight &lt; weight) &#123;</div><div class="line">            [list addObject:product];</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return list;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>为了消除两者重复的代码，通过简单的<code>参数化</code>往往不能完美解决这类问题，相反地会引入过度的复杂度和偶发成本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (NSArray *)findProducts:(NSArray *)products byColor:(ProductColor)color byWeith:(float)weight type:(int)type</div><div class="line">&#123;</div><div class="line">    NSMutableArray *list = [@[] mutableCopy];</div><div class="line">    for (Product *product in products) &#123;</div><div class="line">        if ((type == 1) &amp;&amp; product.color == color) &#123;</div><div class="line">            [list addObject:product];</div><div class="line">            continue;</div><div class="line">        &#125;</div><div class="line">        else if ((type == 2) &amp;&amp; (product.weight &lt; weight))</div><div class="line">        &#123;</div><div class="line">            [list addObject:product];</div><div class="line">            continue;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return list;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>日常工作中，这样的实现手法非常普遍，函数的参数列表随着需求增加不断增加，函数逻辑承担的职责越来越多，逻辑也变得越来越难以控制。</p>
+<ul>
+<li>通过参数配置应对变化的设计往往都是失败的设计</li>
+<li>易于导致复杂的逻辑控制，引发额外的偶发复杂度</li>
+</ul>
+<h2 id="Forth-Attempt-Abstracting-over-Criteria"><a href="#Forth-Attempt-Abstracting-over-Criteria" class="headerlink" title="Forth Attempt: Abstracting over Criteria"></a>Forth Attempt: Abstracting over Criteria</h2><p>为此需要抽象，使其遍历的算法与查找的标准能够独立地变化，互不影响。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@interface ProductSpec : NSObject</div><div class="line">- (BOOL)satisfy:(Product *)product;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>此刻<code>filter</code>的算法逻辑得到封闭，当然函数名需要重命名，使其算法实现更加具有普遍性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (NSArray *)findProducts:(NSArray *)products bySpec:(ProductSpec *)spec</div><div class="line">&#123;</div><div class="line">    NSMutableArray *list = [@[] mutableCopy];</div><div class="line">    for (Product *product in products) &#123;</div><div class="line">        if ([spec satisfy:product]) &#123;</div><div class="line">            [list addObject:product];</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return list;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过可复用的类来封装各种变化，让变化的因素控制在最小的范围内。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">@interface ColorSpec()</div><div class="line">@property (nonatomic, assign) ProductColor color;</div><div class="line">@end</div><div class="line">@implementation ColorSpec</div><div class="line"></div><div class="line">+ (instancetype)specWithColor:(ProductColor)color</div><div class="line">&#123;</div><div class="line">    ColorSpec *spec = [[ColorSpec alloc] init];</div><div class="line">    spec.color = color;</div><div class="line">    return spec;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (BOOL)satisfy:(Product *)product</div><div class="line">&#123;</div><div class="line">    return product.color == RED;</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div><div class="line"></div><div class="line">@interface BelowWeightSpec()</div><div class="line">@property (nonatomic, assign) float limit;</div><div class="line">@end</div><div class="line"></div><div class="line">@implementation BelowWeightSpec</div><div class="line"></div><div class="line">+ (instancetype)specWithBelowWeight:(float)limit</div><div class="line">&#123;</div><div class="line">    BelowWeightSpec *spec = [[BelowWeightSpec alloc] init];</div><div class="line">    spec.limit = limit;</div><div class="line">    return spec;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (BOOL)satisfy:(Product *)product</div><div class="line">&#123;</div><div class="line">    return (product.weight &lt; _limit);</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>用户的接口也变得简单多了，而且富有表现力。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[self findProducts:_products bySpec:[ColorSpec specWithColor:RED]];</div></pre></td></tr></table></figure>
+<p>这是经典的<code>OO</code>设计，如果熟悉设计模式的读者对此已经习以为常了。设计模式是好东西，但往往被滥用。为此不能依葫芦画瓢，死板照抄，而是为了得到更简单的设计而引入设计模式的，这个过程是很自然的。</p>
+<p>与大师们交流，问究此处为何引入设计模式，得到的答案：直觉。忘记所有设计模式吧，管它是不是模式，如果设计是简单的，这就是模式。</p>
+<p>另外还有一个明显的坏味道，ColorSpec和BelowWeightSpec都需要继承ProductSpec，都需要定义一个构造函数和一个私有的字段，并重写satisfy方法，这些都充斥着重复的结构。</p>
+<p>是不是觉得目前的写法已经够用了? 莫急, 让我们来看看下个需求</p>
+<ul>
+<li>需求4：查找所有颜色为红色，并且重量小于10的所有产品</li>
+</ul>
+<h2 id="Firth-Attempt-Composite-Criteria"><a href="#Firth-Attempt-Composite-Criteria" class="headerlink" title="Firth Attempt: Composite Criteria"></a>Firth Attempt: Composite Criteria</h2><p>按照既有的代码结构，往往易于设计出类似ColorAndBelowWeightSpec的实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">@interface ColorAndBelowWeigthSpec()</div><div class="line">@property (nonatomic, assign) ProductColor color;</div><div class="line">@property (nonatomic, assign) float limit;</div><div class="line">@end</div><div class="line"></div><div class="line">@implementation ColorAndBelowWeigthSpec</div><div class="line">+ (instancetype)specWithColor:(ProductColor)color beloWeigth:(float)limit</div><div class="line">&#123;</div><div class="line">    ColorAndBelowWeigthSpec *spec = [[ColorAndBelowWeigthSpec alloc] init];</div><div class="line">    spec.color = color;</div><div class="line">    spec.limit = limit;</div><div class="line">    return spec;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (BOOL)satisfy:(Product *)product</div><div class="line">&#123;</div><div class="line">    return product.color == _color || (product.weight &lt; _limit);</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>存在两个明显的坏味道：</p>
+<ul>
+<li>包含<code>and</code>的命名往往是违背单一职责的信号灯</li>
+<li><code>ColorAndBelowWeightSpec</code>的实现与<code>ColorSpec</code>，<code>BelowWeightSpec</code>之间存在明显的重复</li>
+</ul>
+<p>此刻，需要寻找更本质的抽象来表达设计，<code>and/or/not</code>语义可以完美解决这类问题。</p>
+<ul>
+<li>Composite Spec: AndSpec, OrSpec, NotSpec</li>
+<li>Atomic Spec：ColorSpec, BeblowWeightSpec</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">@interface AndSpec()</div><div class="line">@property (nonatomic, strong) NSArray *specs;</div><div class="line">@end</div><div class="line"></div><div class="line">@implementation AndSpec</div><div class="line">+ (instancetype)spec:(ProductSpec *)spec, ... NS_REQUIRES_NIL_TERMINATION</div><div class="line">&#123;</div><div class="line">    va_list args;</div><div class="line">    va_start( args, spec );</div><div class="line">    NSMutableArray *mArray = [@[spec] mutableCopy];</div><div class="line"></div><div class="line">    for ( ;; )</div><div class="line">    &#123;</div><div class="line">        id tempSpec = va_arg( args, id );</div><div class="line">        if (tempSpec == nil)</div><div class="line">            break;</div><div class="line"></div><div class="line">        [mArray addObject:tempSpec];</div><div class="line">    &#125;</div><div class="line">    va_end( args );</div><div class="line"></div><div class="line">    AndSpec *andSpec = [[AndSpec alloc] init];</div><div class="line">    andSpec.specs = [mArray copy];</div><div class="line"></div><div class="line">    return andSpec;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (BOOL)satisfy:(Product *)product</div><div class="line">&#123;</div><div class="line">    for (ProductSpec *spec in _specs) &#123;</div><div class="line">        if (![spec satisfy:product]) &#123;</div><div class="line">            return NO;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return YES;</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">@interface OrSpec ()</div><div class="line">@property (nonatomic, strong) NSArray *specs;</div><div class="line">@end</div><div class="line"></div><div class="line">@implementation OrSpec</div><div class="line"></div><div class="line">+ (instancetype)spec:(ProductSpec *)spec, ... NS_REQUIRES_NIL_TERMINATION</div><div class="line">&#123;</div><div class="line">    va_list args;</div><div class="line">    va_start( args, spec );</div><div class="line">    NSMutableArray *mArray = [@[spec] mutableCopy];</div><div class="line"></div><div class="line">    for ( ;; )</div><div class="line">    &#123;</div><div class="line">        id tempSpec = va_arg( args, id );</div><div class="line">        if (tempSpec == nil)</div><div class="line">            break;</div><div class="line"></div><div class="line">        [mArray addObject:tempSpec];</div><div class="line">    &#125;</div><div class="line">    va_end( args );</div><div class="line"></div><div class="line">    OrSpec *orSpec = [[OrSpec alloc] init];</div><div class="line">    orSpec.specs = [mArray copy];</div><div class="line"></div><div class="line">    return orSpec;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (BOOL)satisfy:(Product *)product</div><div class="line">&#123;</div><div class="line">    for (ProductSpec *spec in _specs) &#123;</div><div class="line">        if ([spec satisfy:product]) &#123;</div><div class="line">            return YES;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return NO;</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">@interface NotSpec ()</div><div class="line">@property (nonatomic, strong) ProductSpec *spec;</div><div class="line">@end</div><div class="line"></div><div class="line">@implementation NotSpec</div><div class="line"></div><div class="line">+ (instancetype)spec:(ProductSpec *)spec</div><div class="line">&#123;</div><div class="line">    NotSpec *notSpec = [[NotSpec alloc] init];</div><div class="line">    notSpec.spec = spec;</div><div class="line">    return notSpec;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (BOOL)satisfy:(Product *)product</div><div class="line">&#123;</div><div class="line">    if (![_spec satisfy:product]) &#123;</div><div class="line">        return YES;</div><div class="line">    &#125;</div><div class="line">    return NO;</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>可以通过<code>AndSpec</code>组合<code>ColorSpec</code>, <code>BelowWeightSpec</code>来实现需求，简单漂亮，并且富有表达力。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[self findProducts:_products bySpec:[AndSpec spec:[ColorSpec specWithColor:RED], [BelowWeightSpec specWithBelowWeight:10], nil]];</div></pre></td></tr></table></figure>
+<p>但这样的设计存在两个严重的坏问道：</p>
+<ul>
+<li><code>AndSpec</code>与<code>OrSpec</code>存在明显的代码重复，<code>OO</code>设计的第一个直觉就是通过抽取基类来消除重复。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">@interface CombinableSpec ()</div><div class="line">@property (nonatomic, strong) NSArray *specs;</div><div class="line">@end</div><div class="line"></div><div class="line">@implementation CombinableSpec</div><div class="line"></div><div class="line">+ (instancetype)spec:(CombinableSpec *)spec, ... NS_REQUIRES_NIL_TERMINATION</div><div class="line">&#123;</div><div class="line">    va_list args;</div><div class="line">    va_start( args, spec );</div><div class="line">    NSMutableArray *mArray = [@[spec] mutableCopy];</div><div class="line"></div><div class="line">    for ( ;; )</div><div class="line">    &#123;</div><div class="line">        id tempSpec = va_arg( args, id );</div><div class="line">        if (tempSpec == nil)</div><div class="line">            break;</div><div class="line"></div><div class="line">        [mArray addObject:tempSpec];</div><div class="line">    &#125;</div><div class="line">    va_end( args );</div><div class="line"></div><div class="line">    CombinableSpec *combinableSpec = [[self alloc] init];</div><div class="line">    combinableSpec.specs = [mArray copy];</div><div class="line"></div><div class="line">    return combinableSpec;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (BOOL)satisfy:(Product *)product</div><div class="line">&#123;</div><div class="line">    for (ProductSpec *spec in _specs) &#123;</div><div class="line">        if ([spec satisfy:product] == _shortcut) &#123;</div><div class="line">            return _shortcut;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return !_shortcut;</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@implementation AndSpec</div><div class="line">- (instancetype)init</div><div class="line">&#123;</div><div class="line">    self = [super init];</div><div class="line">    if (self) &#123;</div><div class="line">        self.shortcut = NO;</div><div class="line">    &#125;</div><div class="line">    return self;</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">@implementation OrSpec</div><div class="line"></div><div class="line">- (instancetype)init</div><div class="line">&#123;</div><div class="line">    self = [super init];</div><div class="line">    if (self) &#123;</div><div class="line">        self.shortcut = YES;</div><div class="line">    &#125;</div><div class="line">    return self;</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<ul>
+<li>大堆的<code>初始化方法</code>让人眼花缭乱</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[self findProducts:_products bySpec:[NotSpec spec:[AndSpec spec:[ColorSpec specWithColor:RED], [BelowWeightSpec specWithBelowWeight:10], nil]]];</div></pre></td></tr></table></figure>
+<h2 id="Sixth-Attempt-Using-DSL"><a href="#Sixth-Attempt-Using-DSL" class="headerlink" title="Sixth Attempt: Using DSL"></a>Sixth Attempt: Using DSL</h2><p>可以引入DSL改善程序的可读性，让代码更具表达力。</p>
+<p>我们先添加一些DSL:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">static ProductSpec *COLOR(ProductColor color)</div><div class="line">&#123;</div><div class="line">    return [ColorSpec specWithColor:RED];</div><div class="line">&#125;</div><div class="line"></div><div class="line">static ProductSpec *BELOWWEIGHT(float limit)</div><div class="line">&#123;</div><div class="line">    return [BelowWeightSpec specWithBelowWeight:limit];</div><div class="line">&#125;</div><div class="line"></div><div class="line">static ProductSpec *AND(ProductSpec *spec1, ProductSpec *spec2)</div><div class="line">&#123;</div><div class="line">    return [AndSpec spec:spec1, spec2, nil];</div><div class="line">&#125;</div><div class="line"></div><div class="line">static ProductSpec *OR(ProductSpec *spec1, ProductSpec *spec2)</div><div class="line">&#123;</div><div class="line">    return [OrSpec spec:spec1, spec2, nil];</div><div class="line">&#125;</div><div class="line"></div><div class="line">static ProductSpec *NOT(ProductSpec *spec)</div><div class="line">&#123;</div><div class="line">    return [NotSpec spec:spec];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样我们的代码表现起来就是这样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[self findProducts:_products bySpec:NOT(AND(COLOR(RED), BELOWWEIGHT(10)))];</div></pre></td></tr></table></figure>
+<h2 id="Seventh-Attempt-Using-a-Lambda-Expression"><a href="#Seventh-Attempt-Using-a-Lambda-Expression" class="headerlink" title="Seventh Attempt: Using a Lambda Expression"></a>Seventh Attempt: Using a Lambda Expression</h2><p>可以使用Block改善设计，增强表达力。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (NSArray *)findProducts:(NSArray *)products byBlock:(BOOL (^)())block</div><div class="line">&#123;</div><div class="line">    NSMutableArray *list = [@[] mutableCopy];</div><div class="line">    for (Product *product in products) &#123;</div><div class="line">        if (block(product)) &#123;</div><div class="line">            [list addObject:product];</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return list;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>代码现在开起来是这个样子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[self findProducts:_products byBlock:^BOOL(id p) &#123;return [p color] == RED;&#125;];</div></pre></td></tr></table></figure>
+<p>构造DSL，复用这些Block</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">ProductSpecBlock color(ProductColor color)</div><div class="line">&#123;</div><div class="line">    return ^BOOL(id p) &#123;return [p color] == color;&#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">ProductSpecBlock weightBelow(float limit)</div><div class="line">&#123;</div><div class="line">    return ^BOOL(id p) &#123;return [p weight] &lt; limit;&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (void)test7_2</div><div class="line">&#123;</div><div class="line">    [self findProducts:_products byBlock:color(RED)];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="Eighth-attempt-Using-NSPredicate"><a href="#Eighth-attempt-Using-NSPredicate" class="headerlink" title="Eighth attempt: Using NSPredicate"></a>Eighth attempt: Using NSPredicate</h2><p>还可以使用标准库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[self.products filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@&quot;weight &gt; 10&quot;]];</div></pre></td></tr></table></figure>
+<h1 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h1><p>Dome在 WriteLeanPrograms目录下</p>
+<p><a href="https://github.com/uxyheaven/SomeDemo" target="_blank" rel="external">https://github.com/uxyheaven/SomeDemo</a></p>
+<p>今天的编码就到此为止了, 这篇文章本是Horance所写, 笔者将其用OC实现了一遍.如果咱们不是iOS Developer的话, 还是有其他attempt的, 如<code>泛型</code>.</p>
+<h1 id="作者介绍"><a href="#作者介绍" class="headerlink" title="作者介绍"></a>作者介绍</h1><ul>
+<li>刘光聪，程序员，敏捷教练，开源软件爱好者，具有多年大型遗留系统的重构经验，对面向对象，函数式，大数据等领域具有浓厚的兴趣。<ul>
+<li>github: <a href="https://github.com/horance-liu" target="_blank" rel="external">https://github.com/horance-liu</a></li>
+<li>email: <a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#x68;&#111;&#x72;&#x61;&#110;&#x63;&#101;&#64;&#111;&#x75;&#x74;&#x6c;&#x6f;&#111;&#107;&#x2e;&#99;&#111;&#x6d;">&#x68;&#111;&#x72;&#x61;&#110;&#x63;&#101;&#64;&#111;&#x75;&#x74;&#x6c;&#x6f;&#111;&#107;&#x2e;&#99;&#111;&#x6d;</a></li>
+</ul>
+</li>
+<li>邢尧, 资深开发工程师, iOS Developer, 开源软件爱好者, 追求真理比占有真理更加难能可贵<ul>
+<li>Github: <a href="https://github.com/uxyheaven" target="_blank" rel="external">https://github.com/uxyheaven</a></li>
+<li>Blog: <a href="http://blog.csdn.bet/uxyheaven" target="_blank" rel="external">http://blog.csdn.bet/uxyheaven</a></li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/iOS/">iOS</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2017 larklab
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS中的delegated的用法和规范 | 百灵鸟实验室 | 技术分享和研究</title>
+
+  
+  <meta name="author" content="larklab">
+  
+
+  
+  <meta name="description" content="NSObject 的实现分析iOS 的 NSObject 类没有开源, 但是呢 runtime开源了,里面有个类 Object 看接口和NSObject差不多,下面我就对着 Object 的代码来分析下 NSObjectruntime代码在http://opensource.apple.com/tarballs/objc4/objc4-493.9.tar.gz下载,Object在, 这里的文件夹写着Obsolete, 呃.">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="iOS中的delegated的用法和规范"/>
+
+  <meta property="og:site_name" content="百灵鸟实验室"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="百灵鸟实验室" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">百灵鸟实验室</a>
+    </h1>
+    <p class="site-description">技术分享和研究</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/categories/H5">H5</a></li>
+      
+        <li><a href="/categories/android">android</a></li>
+      
+        <li><a href="/categories/iOS">Ios</a></li>
+      
+        <li><a href="/categories/web">web</a></li>
+      
+        <li><a href="/categories/notes">公告</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>iOS中的delegated的用法和规范</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/18/NSObject 的实现分析/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-18T09:28:33.000Z">
+          2017-01-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="NSObject-的实现分析"><a href="#NSObject-的实现分析" class="headerlink" title="NSObject 的实现分析"></a>NSObject 的实现分析</h1><p>iOS 的 NSObject 类没有开源, 但是呢 runtime开源了,里面有个类 Object 看接口和NSObject差不多,下面我就对着 Object 的代码来分析下 NSObject<br>runtime代码在<a href="http://opensource.apple.com/tarballs/objc4/objc4-493.9.tar.gz" target="_blank" rel="external">http://opensource.apple.com/tarballs/objc4/objc4-493.9.tar.gz</a>下载,<br>Object在<object.h>, 这里的文件夹写着Obsolete, 呃.<br><a id="more"></a></object.h></p>
+<h1 id="NSObject-的实现分析-1"><a href="#NSObject-的实现分析-1" class="headerlink" title="NSObject 的实现分析"></a>NSObject 的实现分析</h1><p>本次分析暂时告一段落</p>
+<p>转载请注名出处 <a href="http://blog.csdn.net/uxyheaven/article/details/38120335" target="_blank" rel="external">http://blog.csdn.net/uxyheaven</a></p>
+<p>iOS 的 NSObject 类没有开源, 但是呢 runtime开源了,里面有个类 Object 看接口和NSObject差不多,下面我就对着 Object 的代码来分析下 NSObject</p>
+<p>runtime代码在<a href="http://opensource.apple.com/tarballs/objc4/objc4-493.9.tar.gz" target="_blank" rel="external">http://opensource.apple.com/tarballs/objc4/objc4-493.9.tar.gz</a>下载,<br>Object在<object.h>, 这里的文件夹写着Obsolete, 呃.</object.h></p>
+<h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><h4 id="isa"><a href="#isa" class="headerlink" title="isa"></a>isa</h4><p>是一个指向Class的指针,具体请看这篇文章<br><a href="http://blog.csdn.net/uxyheaven/article/details/38113901" target="_blank" rel="external">Objective-C objc_class 介绍</a></p>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><h4 id="class"><a href="#class" class="headerlink" title="class"></a>class</h4><p>实例方法返回的是isa指针, 类方法返回的是本身</p>
+<p>代码实现如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- class</div><div class="line">&#123;</div><div class="line">	return (id)isa;</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ class</div><div class="line">&#123;</div><div class="line">	return self;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="superclass"><a href="#superclass" class="headerlink" title="superclass"></a>superclass</h4><p>返回父类</p>
+<p>代码实现如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">+ superclass</div><div class="line">&#123;</div><div class="line">	return class_getSuperclass((Class)self);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- superclass</div><div class="line">&#123;</div><div class="line">	return class_getSuperclass(isa);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>调用的是runtime中的class_getSuperclass方法, 跟踪到最后实例方法返回的是isa-&gt;superclass,类方法返回的是self-&gt;superclass</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">static class_t *</div><div class="line">getSuperclass(class_t *cls)</div><div class="line">&#123;</div><div class="line">    if (!cls) return NULL;</div><div class="line">    return cls-&gt;superclass;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="isEqual"><a href="#isEqual" class="headerlink" title="isEqual"></a>isEqual</h4><p>就是直接比较</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (BOOL)isEqual:anObject</div><div class="line">&#123;</div><div class="line">	return anObject == self;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="isMemberOf"><a href="#isMemberOf" class="headerlink" title="isMemberOf:"></a>isMemberOf:</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (BOOL)isMemberOf:aClass</div><div class="line">&#123;</div><div class="line">	return isa == (Class)aClass;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看代码可以得知是通过比较实例对象的isa是否和 传过来的[类 Class] 一样来判断的.而实例对象的isa确实就是指着实例对象的类的.</p>
+<h4 id="isKindOf"><a href="#isKindOf" class="headerlink" title="isKindOf:"></a>isKindOf:</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (BOOL)isKindOf:aClass</div><div class="line">&#123;</div><div class="line">	register Class cls;</div><div class="line">	for (cls = isa; cls; cls = class_getSuperclass(cls))</div><div class="line">		if (cls == (Class)aClass)</div><div class="line">			return YES;</div><div class="line">	return NO;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// class_getSuperclass 展开后如下</div><div class="line">static class_t *</div><div class="line">getSuperclass(class_t *cls)</div><div class="line">&#123;</div><div class="line">    if (!cls) return NULL;</div><div class="line">    return cls-&gt;superclass;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>代码思路也很好理解,如果自己的isa等于aClass(aClass的父类,此处循环)就返回YES,否则返回NO</p>
+<h4 id="init"><a href="#init" class="headerlink" title="init"></a>init</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- init</div><div class="line">&#123;</div><div class="line">    return self;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>没什么好说的</p>
+<h4 id="alloc"><a href="#alloc" class="headerlink" title="alloc"></a>alloc</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">+ alloc</div><div class="line">&#123;</div><div class="line">	return (*_zoneAlloc)((Class)self, 0, malloc_default_zone());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里有一个函数指针和一个结构体,我们跟进去看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">id (*_zoneAlloc)(Class, size_t, void *) = _class_createInstanceFromZone;</div><div class="line"></div><div class="line">PRIVATE_EXTERN id</div><div class="line">_class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone)</div><div class="line">&#123;</div><div class="line">    id obj;</div><div class="line">    size_t size;</div><div class="line"></div><div class="line">    // Can&apos;t create something for nothing</div><div class="line">    if (!cls) return nil;</div><div class="line"></div><div class="line">    // Allocate and initialize</div><div class="line">    size = _class_getInstanceSize(cls) + extraBytes;</div><div class="line"></div><div class="line">    // CF requires all objects be at least 16 bytes.</div><div class="line">    if (size &lt; 16) size = 16;</div><div class="line"></div><div class="line">#if SUPPORT_GC</div><div class="line">    if (UseGC) &#123;</div><div class="line">        obj = (id)auto_zone_allocate_object(gc_zone, size,</div><div class="line">                                            AUTO_OBJECT_SCANNED, 0, 1);</div><div class="line">    &#125; else</div><div class="line">#endif</div><div class="line">    if (zone) &#123;</div><div class="line">        obj = (id)malloc_zone_calloc (zone, 1, size);</div><div class="line">    &#125; else &#123;</div><div class="line">        obj = (id)calloc(1, size);</div><div class="line">    &#125;</div><div class="line">    if (!obj) return nil;</div><div class="line"></div><div class="line">    obj-&gt;isa = cls;</div><div class="line"></div><div class="line">    if (_class_hasCxxStructors(cls)) &#123;</div><div class="line">        obj = _objc_constructOrFree(cls, obj);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return obj;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面那段代码的作用是</p>
+<ol>
+<li>得到这个类占用多少空间,最小占16 bytes</li>
+<li>然后就给这个实例分配多少空间, 如果失败的话就返回nil</li>
+<li>把这个实例的isa设置成这个类对象</li>
+<li>如果cls的info设置了get属性就用cls这个类在obj这个空间去构造一个实例,跟进去是</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">static BOOL object_cxxConstructFromClass(id obj, Class cls)</div><div class="line">&#123;</div><div class="line">    id (*ctor)(id);</div><div class="line">    Class supercls;</div><div class="line"></div><div class="line">    // Stop if neither this class nor any superclass has ctors.</div><div class="line">    if (!_class_hasCxxStructors(cls)) return YES;  // no ctor - ok</div><div class="line"></div><div class="line">    supercls = _class_getSuperclass(cls);</div><div class="line"></div><div class="line">    // Call superclasses&apos; ctors first, if any.</div><div class="line">    if (supercls) &#123;</div><div class="line">        BOOL ok = object_cxxConstructFromClass(obj, supercls);</div><div class="line">        if (!ok) return NO;  // some superclass&apos;s ctor failed - give up</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // Find this class&apos;s ctor, if any.</div><div class="line">    ctor = (id(*)(id))lookupMethodInClassAndLoadCache(cls, SEL_cxx_construct);</div><div class="line">    if (ctor == (id(*)(id))&amp;_objc_msgForward_internal) return YES;  // no ctor - ok</div><div class="line"></div><div class="line">    // Call this class&apos;s ctor.</div><div class="line">    if (PrintCxxCtors) &#123;</div><div class="line">        _objc_inform(&quot;CXX: calling C++ constructors for class %s&quot;, _class_getName(cls));</div><div class="line">    &#125;</div><div class="line">    if ((*ctor)(obj)) return YES;  // ctor called and succeeded - ok</div><div class="line"></div><div class="line">    // This class&apos;s ctor was called and failed.</div><div class="line">    // Call superclasses&apos;s dtors to clean up.</div><div class="line">    if (supercls) object_cxxDestructFromClass(obj, supercls);</div><div class="line">    return NO;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>大意是,先看自己有没有父类,有就递归调用自己,然后给自己添加方法,然后添加类别</p>
+<h4 id="new"><a href="#new" class="headerlink" title="new"></a>new</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">+ new</div><div class="line">&#123;</div><div class="line">	id newObject = (*_alloc)((Class)self, 0);</div><div class="line">	Class metaClass = self-&gt;isa;</div><div class="line">	if (class_getVersion(metaClass) &gt; 1)</div><div class="line">	    return [newObject init];</div><div class="line">	else</div><div class="line">	    return newObject;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>跟进去看一下, 发现是和 alloc差不多</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">id (*_alloc)(Class, size_t) = _class_createInstance;</div><div class="line"></div><div class="line">static id _class_createInstance(Class cls, size_t extraBytes)</div><div class="line">&#123;</div><div class="line">    return _class_createInstanceFromZone (cls, extraBytes, NULL);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="free"><a href="#free" class="headerlink" title="free"></a>free</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- free</div><div class="line">&#123;</div><div class="line">	return (*_dealloc)(self);</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ free</div><div class="line">&#123;</div><div class="line">	return nil;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>跟进去看一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">static id</div><div class="line">_object_dispose(id anObject)</div><div class="line">&#123;</div><div class="line">    if (anObject==nil) return nil;</div><div class="line"></div><div class="line">    objc_destructInstance(anObject);</div><div class="line"></div><div class="line">#if SUPPORT_GC</div><div class="line">    if (UseGC) &#123;</div><div class="line">        auto_zone_retain(gc_zone, anObject); // gc free expects rc==1</div><div class="line">    &#125; else</div><div class="line">#endif</div><div class="line">    &#123;</div><div class="line">        // only clobber isa for non-gc</div><div class="line">        anObject-&gt;isa = _objc_getFreedObjectClass ();</div><div class="line">    &#125;</div><div class="line">    free(anObject);</div><div class="line">    return nil;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void *objc_destructInstance(id obj)</div><div class="line">&#123;</div><div class="line">    if (obj) &#123;</div><div class="line">        Class isa = _object_getClass(obj);</div><div class="line"></div><div class="line">        if (_class_hasCxxStructors(isa)) &#123;</div><div class="line">            object_cxxDestruct(obj);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if (_class_instancesHaveAssociatedObjects(isa)) &#123;</div><div class="line">            _object_remove_assocations(obj);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if (!UseGC) objc_clear_deallocating(obj);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return obj;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>执行一个叫object_cxxDestruct的东西干了点什么事(沿着继承链逐层向上搜寻SEL_cxx_destruct这个selector, 找到函数实现(void (*)(id)(函数指针)并执行)</li>
+<li>执行_object_remove_assocations去除和这个对象关联的对象</li>
+<li>执行objc_clear_deallocating，清空引用计数表并清除弱引用表，将所有weak引用指nil</li>
+</ol>
+<h4 id="respondsTo"><a href="#respondsTo" class="headerlink" title="respondsTo:"></a>respondsTo:</h4><p>是查找有没有实现某个方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">- (BOOL)respondsTo:(SEL)aSelector</div><div class="line">&#123;</div><div class="line">	return class_respondsToMethod(isa, aSelector);</div><div class="line">&#125;</div><div class="line"></div><div class="line">BOOL class_respondsToMethod(Class cls, SEL sel)</div><div class="line">&#123;</div><div class="line">    OBJC_WARN_DEPRECATED;</div><div class="line"></div><div class="line">    return class_respondsToSelector(cls, sel);</div><div class="line">&#125;</div><div class="line"></div><div class="line">BOOL class_respondsToSelector(Class cls, SEL sel)</div><div class="line">&#123;</div><div class="line">    IMP imp;</div><div class="line"></div><div class="line">    if (!sel  ||  !cls) return NO;</div><div class="line"></div><div class="line">    // Avoids +initialize because it historically did so.</div><div class="line">    // We&apos;re not returning a callable IMP anyway.</div><div class="line">    imp = lookUpMethod(cls, sel, NO/*initialize*/, YES/*cache*/);</div><div class="line">    return (imp != (IMP)_objc_msgForward_internal) ? YES : NO;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="perform"><a href="#perform" class="headerlink" title="perform:"></a>perform:</h4><p>perform是发送消息到指定的接收器并返回值, 下面是代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- perform:(SEL)aSelector</div><div class="line">&#123;</div><div class="line">	if (aSelector)</div><div class="line">		return objc_msgSend(self, aSelector);</div><div class="line">	else</div><div class="line">		return [self error:_errBadSel, sel_getName(_cmd), aSelector];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>原来就是objc_msgSend这玩意.objc_msgSend实现有很多个版本, 大体逻辑应该差不多, 首先在找缓存,找到就跳转过去,找不到就在Class的方法列表里找方法,  如果还是没找到就转发.</p>
+<p>下的是arm下的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">ENTRY objc_msgSend</div><div class="line"># check whether receiver is nil</div><div class="line">	teq     a1, #0</div><div class="line">	itt	eq</div><div class="line">	moveq   a2, #0</div><div class="line">	bxeq    lr</div><div class="line"></div><div class="line"># save registers and load receiver&apos;s class for CacheLookup</div><div class="line">	stmfd   sp!, &#123;a4,v1&#125;</div><div class="line">	ldr     v1, [a1, #ISA]</div><div class="line"></div><div class="line"># receiver is non-nil: search the cache</div><div class="line">	CacheLookup a2, v1, LMsgSendCacheMiss</div><div class="line"></div><div class="line"># cache hit (imp in ip) and CacheLookup returns with nonstret (eq) set, restore registers and call</div><div class="line">	ldmfd   sp!, &#123;a4,v1&#125;</div><div class="line">	bx      ip</div><div class="line"></div><div class="line"># cache miss: go search the method lists</div><div class="line">LMsgSendCacheMiss:</div><div class="line">	ldmfd	sp!, &#123;a4,v1&#125;</div><div class="line">	b	_objc_msgSend_uncached</div><div class="line"></div><div class="line">LMsgSendExit:</div><div class="line">	END_ENTRY objc_msgSend</div><div class="line"></div><div class="line"></div><div class="line">	STATIC_ENTRY objc_msgSend_uncached</div><div class="line"></div><div class="line"># Push stack frame</div><div class="line">	stmfd	sp!, &#123;a1-a4,r7,lr&#125;</div><div class="line">	add     r7, sp, #16</div><div class="line"></div><div class="line"># Load class and selector</div><div class="line">	ldr	a1, [a1, #ISA]		/* class = receiver-&gt;isa  */</div><div class="line">	# MOVE	a2, a2			/* selector already in a2 */</div><div class="line"></div><div class="line"># Do the lookup</div><div class="line">	MI_CALL_EXTERNAL(__class_lookupMethodAndLoadCache)</div><div class="line">	MOVE    ip, a1</div><div class="line"></div><div class="line"># Prep for forwarding, Pop stack frame and call imp</div><div class="line">	teq	v1, v1		/* set nonstret (eq) */</div><div class="line">	ldmfd	sp!, &#123;a1-a4,r7,lr&#125;</div><div class="line">	bx	ip</div></pre></td></tr></table></figure>
+<h4 id="conformsTo"><a href="#conformsTo" class="headerlink" title="conformsTo:"></a>conformsTo:</h4><p>返回是否遵循了某个协议</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">- (BOOL) conformsTo: (Protocol *)aProtocolObj</div><div class="line">&#123;</div><div class="line">  return [(id)isa conformsTo:aProtocolObj];</div><div class="line">&#125;</div><div class="line"></div><div class="line">+ (BOOL) conformsTo: (Protocol *)aProtocolObj</div><div class="line">&#123;</div><div class="line">  Class class;</div><div class="line">  for (class = self; class; class = class_getSuperclass(class))</div><div class="line">    &#123;</div><div class="line">      if (class_conformsToProtocol(class, aProtocolObj)) return YES;</div><div class="line">    &#125;</div><div class="line">  return NO;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最终用的是class_conformsToProtocol, 返回一个布尔值,表示一个类是否符合给定的协议。</p>
+<p>class_conformsToProtocol的实如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">BOOL class_conformsToProtocol(Class cls_gen, Protocol *proto_gen)</div><div class="line">&#123;</div><div class="line">    struct old_class *cls = oldcls(cls_gen);</div><div class="line">    struct old_protocol *proto = oldprotocol(proto_gen);</div><div class="line"></div><div class="line">    if (!cls_gen) return NO;</div><div class="line">    if (!proto) return NO;</div><div class="line"></div><div class="line">    if (cls-&gt;isa-&gt;version &gt;= 3) &#123;</div><div class="line">        struct old_protocol_list *list;</div><div class="line">        for (list = cls-&gt;protocols; list != NULL; list = list-&gt;next) &#123;</div><div class="line">            int i;</div><div class="line">            for (i = 0; i &lt; list-&gt;count; i++) &#123;</div><div class="line">                if (list-&gt;list[i] == proto) return YES;</div><div class="line">                if (protocol_conformsToProtocol((Protocol *)list-&gt;list[i], proto_gen)) return YES;</div><div class="line">            &#125;</div><div class="line">            if (cls-&gt;isa-&gt;version &lt;= 4) break;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return NO;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看到是在cls-&gt;protocols里面找.protocols 是协议的数组</p>
+<h4 id="copy"><a href="#copy" class="headerlink" title="copy"></a>copy</h4><p>浅拷贝</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">- copy</div><div class="line">&#123;</div><div class="line">	return [self copyFromZone: [self zone]];</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 返回指定区域的指针</div><div class="line">- (void *)zone</div><div class="line">&#123;</div><div class="line">	void *z = malloc_zone_from_ptr(self);</div><div class="line">	return z ? z : malloc_default_zone();</div><div class="line">&#125;</div><div class="line"></div><div class="line">- copyFromZone:(void *)z</div><div class="line">&#123;</div><div class="line">	return (*_zoneCopy)(self, 0, z);</div><div class="line">&#125;</div><div class="line"></div><div class="line">id (*_zoneCopy)(id, size_t, void *) = _object_copyFromZone;</div><div class="line"></div><div class="line">static id _object_copyFromZone(id oldObj, size_t extraBytes, void *zone)</div><div class="line">&#123;</div><div class="line">    id obj;</div><div class="line">    size_t size;</div><div class="line"></div><div class="line">    if (!oldObj) return nil;</div><div class="line"></div><div class="line">	// 用旧对象的isa生成一个新的对象的空间</div><div class="line">    obj = (*_zoneAlloc)(oldObj-&gt;isa, extraBytes, zone);</div><div class="line">    size = _class_getInstanceSize(oldObj-&gt;isa) + extraBytes;</div><div class="line"></div><div class="line">    // fixme need C++ copy constructor</div><div class="line">    // 把旧对象的内存拷贝到新对象</div><div class="line">    objc_memmove_collectable(obj, oldObj, size);</div><div class="line"></div><div class="line">#if SUPPORT_GC</div><div class="line">    if (UseGC) gc_fixup_weakreferences(obj, oldObj);</div><div class="line">#endif</div><div class="line"></div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/iOS/">iOS</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2017 larklab
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS下的dao层实现代码 | 百灵鸟实验室 | 技术分享和研究</title>
+
+  
+  <meta name="author" content="larklab">
+  
+
+  
+  <meta name="description" content="iOS下的dao层实现代码什么是dao层DAO (Data Access Object) 数据访问对象是一个面向对象的接口. 直接操作数据库, 针对数据的增添,删除,修改,查找,具体为业务逻辑层或表示层提供数据服务.">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="iOS下的dao层实现代码"/>
+
+  <meta property="og:site_name" content="百灵鸟实验室"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="百灵鸟实验室" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">百灵鸟实验室</a>
+    </h1>
+    <p class="site-description">技术分享和研究</p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/categories/H5">H5</a></li>
+      
+        <li><a href="/categories/android">android</a></li>
+      
+        <li><a href="/categories/iOS">Ios</a></li>
+      
+        <li><a href="/categories/web">web</a></li>
+      
+        <li><a href="/categories/notes">公告</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>iOS下的dao层实现代码</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2017/01/18/iOS下的dao层实现代码/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-18T09:28:33.000Z">
+          2017-01-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="iOS下的dao层实现代码"><a href="#iOS下的dao层实现代码" class="headerlink" title="iOS下的dao层实现代码"></a>iOS下的dao层实现代码</h2><h4 id="什么是dao层"><a href="#什么是dao层" class="headerlink" title="什么是dao层"></a>什么是dao层</h4><p>DAO (Data Access Object) 数据访问对象是一个面向对象的接口. 直接操作数据库, 针对数据的增添,删除,修改,查找,具体为业务逻辑层或表示层提供数据服务.</p>
+<a id="more"></a>
+<h4 id="什么是dao层-1"><a href="#什么是dao层-1" class="headerlink" title="什么是dao层"></a>什么是dao层</h4><p>DAO (Data Access Object) 数据访问对象是一个面向对象的接口. 直接操作数据库, 针对数据的增添,删除,修改,查找,具体为业务逻辑层或表示层提供数据服务.</p>
+<h4 id="一个dao的例子"><a href="#一个dao的例子" class="headerlink" title="一个dao的例子"></a>一个dao的例子</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">- (void)saveRemind:(RemindEntity *)remind; // 保存一个提醒</div><div class="line">- (void)deleteRemindWithWhere:(NSString *)where; // 删除一个提醒</div><div class="line">- (RemindEntity *) loadRemindWithRemindID:(NSString *)rid; // 读取一个提醒</div><div class="line">- (void)deleteRemindWithRemindID:(NSString *)rid; // 删除一个提醒</div><div class="line">- (void)deleteRemindWithWeihuaId:(NSString *)weihuaId rcdId:(int)rcdId; // 删除一个联系人或者微话好友的提醒</div><div class="line">- (NSArray *)searchRemindWithWhere:(NSString *)where</div><div class="line">                            order:(NSString *)order</div><div class="line">                            limit:(NSString *)limit; // 查找提醒</div><div class="line">- (NSInteger)remindCountWithWhere:(NSString *)where; // 返回提醒数量</div><div class="line">- (NSArray *)allArrivalReminds; // 返回所有未过期, 下次开始时间小于现在时间的提醒</div><div class="line">- (NSArray *)allNonOverdueReminds; // 返回所有未过期的提醒</div><div class="line">+ (void) setupDB; // 初始化数据库</div></pre></td></tr></table></figure>
+<p>内部实现是用fmdb,得写大量的sql.如果我们有多个实体类, 就得写多个dao.</p>
+<h4 id="范化的dao"><a href="#范化的dao" class="headerlink" title="范化的dao"></a>范化的dao</h4><p>下面我们来看一个范化的dao, 就不用为每个实体专门写sql了,<br>具体使用的时候可以继承这个类或者写个工厂类.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">@protocol XYBaseDaoEntityProtocol &lt;NSObject&gt;</div><div class="line"></div><div class="line">@required</div><div class="line">// 返回表名</div><div class="line">+ (NSString *)getTableName;</div><div class="line"></div><div class="line">// 返回主键</div><div class="line">+ (NSString *)getPrimaryKey;</div><div class="line"></div><div class="line">@end</div><div class="line"></div><div class="line"></div><div class="line">// 范化的本地dao类</div><div class="line">@interface XYBaseDao : NSObject</div><div class="line"></div><div class="line">@property (nonatomic, weak, readonly) Class entityClass;</div><div class="line"></div><div class="line">+ (instancetype)daoWithEntityClass:(Class)aClass;</div><div class="line"></div><div class="line">- (NSError *)saveEntity:(id)entity;</div><div class="line">- (NSError *)saveEntityWithArray:(NSArray *)array;</div><div class="line"></div><div class="line">- (id)loadEntityWithKey:(NSString *)key;</div><div class="line">- (NSArray *)loadEntityWithWhere:(NSString *)where;</div><div class="line"></div><div class="line">- (NSInteger)countWithWhere:(NSString *)where;</div><div class="line"></div><div class="line">- (NSError *)deleteEntityWithKey:(NSString *)key;</div><div class="line">- (NSError *)deleteEntityWithWhere:(NSString *)where;</div><div class="line"></div><div class="line">- (void)deleteAllEntity;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>这个dao是基于LKDBHelper的, 把实体对象的类当初始化参数传进去.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">+ (instancetype)daoWithEntityClass:(Class)aClass</div><div class="line">&#123;</div><div class="line">    XYBaseDao *dao = [[[self class] alloc] initWithEntityClass:aClass];</div><div class="line"></div><div class="line">    return dao;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (instancetype)initWithEntityClass:(Class)aClass</div><div class="line">&#123;</div><div class="line">    self = [super init];</div><div class="line">    if (self)</div><div class="line">    &#123;</div><div class="line">        _entityClass = aClass;</div><div class="line">        _globalHelper = [LKDBHelper getUsingLKDBHelper];</div><div class="line">        // 创建表</div><div class="line">        [_globalHelper createTableWithModelClass:[_entityClass class]];</div><div class="line">    &#125;</div><div class="line">    return self;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">- (NSError *)saveEntity:(id)entity</div><div class="line">&#123;</div><div class="line">    if (entity == nil)</div><div class="line">        return [NSError errorWithDomain:[NSString stringWithFormat:@&quot;[save error] :%@&quot;, entity] code:XYBaseDao_error_code userInfo:nil];</div><div class="line"></div><div class="line">    LKDBHelper *globalHelper = [LKDBHelper getUsingLKDBHelper];</div><div class="line"></div><div class="line">    if (![globalHelper insertToDB:entity])</div><div class="line">    &#123;</div><div class="line">        return [NSError errorWithDomain:[NSString stringWithFormat:@&quot;[save error] :%@&quot;, entity] code:XYBaseDao_error_code userInfo:nil];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return nil;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">- (NSError *)saveEntityWithArray:(NSArray *)array</div><div class="line">&#123;</div><div class="line">    if (array == nil || array.count == 0)</div><div class="line">        return [NSError errorWithDomain:[NSString stringWithFormat:@&quot;[save error] :%@&quot;, array] code:XYBaseDao_error_code userInfo:nil];</div><div class="line"></div><div class="line">    NSMutableString *str = [NSMutableString stringWithFormat:@&quot;[save error] :&quot;];</div><div class="line">    NSInteger length = str.length;</div><div class="line"></div><div class="line">    __weak __typeof(XYBaseDao *) weakSelf = self;</div><div class="line"></div><div class="line">    // 事务 transaction</div><div class="line">    [_globalHelper executeDB:^(FMDatabase *db) &#123;</div><div class="line">        [db beginTransaction];</div><div class="line">        for (NSObject *entity in array)</div><div class="line">        &#123;</div><div class="line">            if (![weakSelf.globalHelper insertToDB:entity])</div><div class="line">            &#123;</div><div class="line">                [str stringByAppendingFormat:@&quot;%@ &quot;, entity];</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        [db commit];</div><div class="line">    &#125;];</div><div class="line"></div><div class="line">    if (str.length &gt; length)</div><div class="line">    &#123;</div><div class="line">        return [NSError errorWithDomain:str code:XYBaseDao_error_code userInfo:nil];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return nil;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">- (id)loadEntityWithKey:(NSString *)key</div><div class="line">&#123;</div><div class="line">    if (key.length == 0)</div><div class="line">        return nil;</div><div class="line"></div><div class="line">    id object = [[_entityClass alloc] init];</div><div class="line"></div><div class="line">    NSString *where = nil;</div><div class="line"></div><div class="line">    if ([key isKindOfClass:[NSString class]])</div><div class="line">    &#123;</div><div class="line">        where = [NSString stringWithFormat:@&quot;%@ = &apos;%@&apos;&quot;, [_entityClass getPrimaryKey], key];</div><div class="line">    &#125;</div><div class="line">    else if ([key isKindOfClass:[NSNumber class]])</div><div class="line">    &#123;</div><div class="line">        where = [NSString stringWithFormat:@&quot;%@ = %@&quot;, [_entityClass getPrimaryKey], key];</div><div class="line">    &#125;</div><div class="line">    else if (1)</div><div class="line">    &#123;</div><div class="line">#pragma mark- todo  多主键种类判断</div><div class="line">        where = @&quot;&quot;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    object = [_entityClass searchSingleWithWhere:where orderBy:nil];</div><div class="line"></div><div class="line">    return object;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (NSArray *)loadEntityWithWhere:(NSString *)where</div><div class="line">&#123;</div><div class="line">    if (where.length == 0)</div><div class="line">        return nil;</div><div class="line"></div><div class="line">    NSArray *array = [_entityClass searchWithWhere:where orderBy:nil offset:0 count:XYBaseDao_load_maxCount];</div><div class="line"></div><div class="line">    return array;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (NSInteger)countWithWhere:(NSString *)where</div><div class="line">&#123;</div><div class="line">    return [_entityClass rowCountWithWhere:where];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">- (NSError *)deleteEntityWithKey:(NSString *)key</div><div class="line">&#123;</div><div class="line">    id object = [[_entityClass alloc] init];</div><div class="line">    [object setValue:key forKey:[_entityClass getPrimaryKey]];</div><div class="line"></div><div class="line">    if (![object deleteToDB])</div><div class="line">    &#123;</div><div class="line">        return  [NSError errorWithDomain:[NSString stringWithFormat:@&quot;[delete error] : %@ %@&quot;, _entityClass, key] code:XYBaseDao_error_code userInfo:nil];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return nil;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (NSError *)deleteEntityWithWhere:(NSString *)where</div><div class="line">&#123;</div><div class="line">    if (![_entityClass deleteWithWhere:where])</div><div class="line">    &#123;</div><div class="line">        return  [NSError errorWithDomain:[NSString stringWithFormat:@&quot;[delete error] : %@ %@&quot;, _entityClass, where] code:XYBaseDao_error_code userInfo:nil];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return nil;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (void)deleteAllEntity</div><div class="line">&#123;</div><div class="line">    [LKDBHelper clearTableData:[_entityClass class]];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最后是demo</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">- (void)clickTestDao:(id)sender</div><div class="line">&#123;</div><div class="line">    XYBaseDao *dao = [XYBaseDao daoWithEntityClass:[CarEntity class]];</div><div class="line">    [dao deleteAllEntity];</div><div class="line"></div><div class="line">    CarEntity *car = [[CarEntity alloc] init];</div><div class="line">    car.name = @&quot;a&quot;;</div><div class="line">    car.brand = @&quot;科鲁兹&quot;;</div><div class="line">    car.time = 1;</div><div class="line"></div><div class="line">    [dao saveEntity:car];</div><div class="line"></div><div class="line">    CarEntity *car2 = [[CarEntity alloc] init];</div><div class="line">    car2.name = @&quot;b&quot;;</div><div class="line">    car2.brand = @&quot;科鲁兹&quot;;</div><div class="line">    car2.time = 1;</div><div class="line"></div><div class="line">    CarEntity *car3 = [[CarEntity alloc] init];</div><div class="line">    car3.name = @&quot;c&quot;;</div><div class="line">    car3.brand = @&quot;福克斯&quot;;</div><div class="line">    car3.time = 1;</div><div class="line"></div><div class="line">    CarEntity *car5 = [[CarEntity alloc] init];</div><div class="line">    car5.name = @&quot;d&quot;;</div><div class="line">    car5.brand = @&quot;高尔夫&quot;;</div><div class="line">    car5.time = 1;</div><div class="line"></div><div class="line">    NSArray *array = @[car2, car3, car5];</div><div class="line"></div><div class="line">    [dao saveEntityWithArray:array];</div><div class="line"></div><div class="line">    CarEntity *car4 = [dao loadEntityWithKey:@&quot;c&quot;];</div><div class="line">    NSLog(@&quot;%@&quot;, car4);</div><div class="line"></div><div class="line">    NSArray *array2 = [dao loadEntityWithWhere:@&quot;brand = &apos;科鲁兹&apos;&quot;];</div><div class="line">    NSLog(@&quot;%@&quot;, array2);</div><div class="line"></div><div class="line">    NSInteger count = [dao countWithWhere:nil];</div><div class="line">    NSLog(@&quot;%d&quot;, count);</div><div class="line"></div><div class="line">    [dao deleteEntityWithKey:@&quot;c&quot;];</div><div class="line">    [dao deleteEntityWithKey:@&quot;brand = &apos;科鲁兹&apos;&quot;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/iOS/">iOS</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2017 larklab
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
